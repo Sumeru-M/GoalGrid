@@ -83,3 +83,14 @@ export function priorityColor(theme: Theme, level: number): string {
 export function priorityLabel(level: number): string {
   return `P${Math.min(5, Math.max(1, level))}`;
 }
+
+/**
+ * Priority colour on the inverted "featured" surface: a ramp built from the
+ * featured ink (P1 strongest) so dots stay visible — the RN equivalent of the
+ * web's `filter: invert(1)` on featured-card dots.
+ */
+export function featuredPriorityColor(theme: Theme, level: number): string {
+  const alpha = [1, 0.8, 0.62, 0.46, 0.32][Math.min(5, Math.max(1, level)) - 1];
+  const rgb = theme.inkFeatured === "#000000" ? "0,0,0" : "255,255,255";
+  return `rgba(${rgb},${alpha})`;
+}
