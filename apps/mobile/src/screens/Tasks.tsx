@@ -10,19 +10,27 @@ export function Tasks() {
   const t = useTheme();
   const { data, openAdd } = useApp();
   const [busy, setBusy] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const done = data.completedTodayByGoal;
 
   const levelOf: Record<string, number> = {};
   for (const d of data.schedule?.days ?? []) for (const b of d.blocks) levelOf[b.goalId] = b.priorityLevel;
 
+  function flash(msg: string) {
+    setNotice(msg);
+    setTimeout(() => setNotice(null), 2500);
+  }
+
   async function markDone(id: string) {
     setBusy(id);
     try { await api.recordOutcome(id, true, todayISO()); await data.reload(); }
+    catch (e) { flash(e instanceof Error ? e.message : "Couldn't save. Try again."); }
     finally { setBusy(null); }
   }
   async function remove(id: string) {
     setBusy(id);
     try { await api.deleteGoal(id); await data.reload(); }
+    catch (e) { flash(e instanceof Error ? e.message : "Couldn't delete. Try again."); }
     finally { setBusy(null); }
   }
 
@@ -55,6 +63,8 @@ export function Tasks() {
           </View>
         </Card>
       ))}
+
+      {notice && <Sub style={{ color: t.danger, textAlign: "center", marginTop: 12 }}>{notice}</Sub>}
 
       <Btn label="+ Add goal" onPress={openAdd} />
     </Screen>

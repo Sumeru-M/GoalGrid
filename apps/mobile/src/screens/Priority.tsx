@@ -13,15 +13,28 @@ export function Priority() {
   const [ordered, setOrdered] = useState<Goal[]>([]);
   const [levels, setLevels] = useState<Record<string, PriorityLevel>>({});
   const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  function flash(msg: string) {
+    setNotice(msg);
+    setTimeout(() => setNotice(null), 2500);
+  }
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
-      const today = todayISO();
-      const scored = await Promise.all(data.goals.map(async (g) => ({ g, ex: await api.explainGoal(g.id, today) })));
-      scored.sort((a, b) => b.ex.score - a.ex.score);
-      setOrdered(scored.map((s) => s.g));
-      setLevels(Object.fromEntries(scored.map((s) => [s.g.id, s.ex.priorityLevel])));
+      try {
+        const today = todayISO();
+        const scored = await Promise.all(data.goals.map(async (g) => ({ g, ex: await api.explainGoal(g.id, today) })));
+        if (cancelled) return;
+        scored.sort((a, b) => b.ex.score - a.ex.score);
+        setOrdered(scored.map((s) => s.g));
+        setLevels(Object.fromEntries(scored.map((s) => [s.g.id, s.ex.priorityLevel])));
+      } catch (e) {
+        if (!cancelled) flash(e instanceof Error ? e.message : "Couldn't load priorities.");
+      }
     })();
+    return () => { cancelled = true; };
   }, [data.goals]);
 
   async function commit(next: Goal[]) {
@@ -36,6 +49,8 @@ export function Priority() {
       }
       setLevels(newLevels);
       await data.reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : "Couldn't update priorities.");
     } finally { setBusy(false); }
   }
 
@@ -75,6 +90,8 @@ export function Priority() {
           </View>
         </View>
       ))}
+
+      {notice && <Sub style={{ color: t.danger, textAlign: "center", marginTop: 4 }}>{notice}</Sub>}
     </Screen>
   );
 }

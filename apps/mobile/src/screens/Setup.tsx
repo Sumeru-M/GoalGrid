@@ -22,6 +22,7 @@ export function Setup({ onDone }: { onDone: () => void }) {
   const t = useTheme();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [occupation, setOccupation] = useState<Occupation>("student");
   const [age, setAge] = useState("19");
@@ -45,6 +46,7 @@ export function Setup({ onDone }: { onDone: () => void }) {
 
   async function finish() {
     setSaving(true);
+    setError(null);
     try {
       const commitments: CommitmentBlock[] = commit > 0 ? [{
         id: "commit", label: occupation === "student" ? "College" : "Work",
@@ -62,6 +64,8 @@ export function Setup({ onDone }: { onDone: () => void }) {
       const ordered = order.map((k) => activities.find((a) => a.key === k)).filter((a): a is Activity => !!a);
       for (let i = 0; i < ordered.length; i++) await api.declarePriority(ordered[i].category, Math.min(5, i + 1) as PriorityLevel);
       onDone();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't save your setup. Please check your entries and try again.");
     } finally { setSaving(false); }
   }
 
@@ -145,6 +149,8 @@ export function Setup({ onDone }: { onDone: () => void }) {
             </View>
           )}
         </View>
+
+        {error && <Sub style={{ color: t.danger, textAlign: "center", marginBottom: 4 }}>{error}</Sub>}
 
         <View style={{ flexDirection: "row", gap: 12 }}>
           {step > 0 && <View style={{ flex: 1 }}><Btn label="Back" ghost onPress={() => setStep(step - 1)} /></View>}
