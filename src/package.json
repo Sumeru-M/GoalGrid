@@ -1,0 +1,7 @@
+{
+  "name": "goalgrid-core",
+  "version": "0.1.0",
+  "private": true,
+  "main": "engine.ts",
+  "description": "GoalGrid AI planning engine (framework-agnostic TypeScript)."
+}
