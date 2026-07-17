@@ -1,0 +1,20 @@
+{
+  "name": "goalgrid-ai-engine",
+  "version": "0.1.0",
+  "description": "AI planning engine: priority scoring, behaviour learning and time-allocated rescheduling.",
+  "type": "module",
+  "main": "src/engine.ts",
+  "scripts": {
+    "demo": "tsx demo/demo.ts",
+    "test": "tsx test/engine.test.ts && tsx test/backend.test.ts",
+    "test:engine": "tsx test/engine.test.ts",
+    "test:backend": "tsx test/backend.test.ts",
+    "server": "tsx backend/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

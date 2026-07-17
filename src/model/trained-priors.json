@@ -1,0 +1,674 @@
+{
+ "version": 1,
+ "trainedOn": 600000,
+ "priorityScale": "1=highest..5=lowest",
+ "shrinkageK": 50.0,
+ "globalCategoryMean": {
+  "study": 3.703,
+  "work": 2.492,
+  "health": 2.354,
+  "sports": 2.88,
+  "gym": 2.859,
+  "hobbies": 2.878,
+  "social": 2.643,
+  "chores": 2.905,
+  "rest": 3.27
+ },
+ "occCatsKeyedByOccupationAge": [
+  "study",
+  "work",
+  "hobbies",
+  "social",
+  "chores",
+  "rest"
+ ],
+ "physicalCatsKeyedByAgeActivity": [
+  "health",
+  "sports",
+  "gym"
+ ],
+ "byOccupationAge": {
+  "college_student": {
+   "14-17": {
+    "study": 1.663,
+    "work": 4.497,
+    "hobbies": 2.998,
+    "social": 2.215,
+    "chores": 2.899,
+    "rest": 3.304
+   },
+   "18-22": {
+    "study": 1.66,
+    "work": 4.502,
+    "hobbies": 2.997,
+    "social": 2.206,
+    "chores": 2.901,
+    "rest": 3.306
+   },
+   "23-29": {
+    "study": 1.661,
+    "work": 4.482,
+    "hobbies": 3.006,
+    "social": 2.289,
+    "chores": 2.884,
+    "rest": 3.284
+   },
+   "30-39": {
+    "study": 1.663,
+    "work": 4.497,
+    "hobbies": 2.998,
+    "social": 2.215,
+    "chores": 2.899,
+    "rest": 3.304
+   },
+   "40-49": {
+    "study": 1.663,
+    "work": 4.497,
+    "hobbies": 2.998,
+    "social": 2.215,
+    "chores": 2.899,
+    "rest": 3.304
+   },
+   "50-59": {
+    "study": 1.663,
+    "work": 4.497,
+    "hobbies": 2.998,
+    "social": 2.215,
+    "chores": 2.899,
+    "rest": 3.304
+   },
+   "60-64": {
+    "study": 1.663,
+    "work": 4.497,
+    "hobbies": 2.998,
+    "social": 2.215,
+    "chores": 2.899,
+    "rest": 3.304
+   },
+   "65-70": {
+    "study": 1.663,
+    "work": 4.497,
+    "hobbies": 2.998,
+    "social": 2.215,
+    "chores": 2.899,
+    "rest": 3.304
+   }
+  },
+  "other": {
+   "14-17": {
+    "study": 3.238,
+    "work": 1.917,
+    "hobbies": 2.7,
+    "social": 2.144,
+    "chores": 3.777,
+    "rest": 3.296
+   },
+   "18-22": {
+    "study": 3.214,
+    "work": 1.912,
+    "hobbies": 2.998,
+    "social": 2.212,
+    "chores": 2.899,
+    "rest": 3.292
+   },
+   "23-29": {
+    "study": 3.199,
+    "work": 1.91,
+    "hobbies": 2.997,
+    "social": 2.318,
+    "chores": 2.9,
+    "rest": 3.311
+   },
+   "30-39": {
+    "study": 3.893,
+    "work": 1.929,
+    "hobbies": 2.997,
+    "social": 2.493,
+    "chores": 2.895,
+    "rest": 3.3
+   },
+   "40-49": {
+    "study": 4.116,
+    "work": 1.929,
+    "hobbies": 3.0,
+    "social": 2.694,
+    "chores": 2.903,
+    "rest": 3.303
+   },
+   "50-59": {
+    "study": 4.333,
+    "work": 1.919,
+    "hobbies": 3.003,
+    "social": 2.889,
+    "chores": 2.899,
+    "rest": 3.293
+   },
+   "60-64": {
+    "study": 4.326,
+    "work": 1.913,
+    "hobbies": 3.005,
+    "social": 3.04,
+    "chores": 2.6,
+    "rest": 3.271
+   },
+   "65-70": {
+    "study": 4.32,
+    "work": 1.938,
+    "hobbies": 2.996,
+    "social": 3.112,
+    "chores": 2.59,
+    "rest": 3.096
+   }
+  },
+  "professional": {
+   "14-17": {
+    "study": 3.939,
+    "work": 1.579,
+    "hobbies": 3.003,
+    "social": 2.634,
+    "chores": 2.881,
+    "rest": 3.293
+   },
+   "18-22": {
+    "study": 3.188,
+    "work": 1.579,
+    "hobbies": 3.009,
+    "social": 2.207,
+    "chores": 2.899,
+    "rest": 3.299
+   },
+   "23-29": {
+    "study": 3.199,
+    "work": 1.578,
+    "hobbies": 3.003,
+    "social": 2.323,
+    "chores": 2.902,
+    "rest": 3.298
+   },
+   "30-39": {
+    "study": 3.883,
+    "work": 1.579,
+    "hobbies": 3.005,
+    "social": 2.493,
+    "chores": 2.9,
+    "rest": 3.299
+   },
+   "40-49": {
+    "study": 4.114,
+    "work": 1.578,
+    "hobbies": 3.0,
+    "social": 2.696,
+    "chores": 2.9,
+    "rest": 3.301
+   },
+   "50-59": {
+    "study": 4.338,
+    "work": 1.58,
+    "hobbies": 3.003,
+    "social": 2.89,
+    "chores": 2.899,
+    "rest": 3.295
+   },
+   "60-64": {
+    "study": 4.342,
+    "work": 1.587,
+    "hobbies": 2.999,
+    "social": 3.019,
+    "chores": 2.606,
+    "rest": 3.242
+   },
+   "65-70": {
+    "study": 4.324,
+    "work": 1.576,
+    "hobbies": 2.972,
+    "social": 3.139,
+    "chores": 2.635,
+    "rest": 3.094
+   }
+  },
+  "retired": {
+   "14-17": {
+    "study": 4.341,
+    "work": 4.493,
+    "hobbies": 2.308,
+    "social": 3.114,
+    "chores": 2.605,
+    "rest": 3.125
+   },
+   "18-22": {
+    "study": 4.341,
+    "work": 4.493,
+    "hobbies": 2.308,
+    "social": 3.114,
+    "chores": 2.605,
+    "rest": 3.125
+   },
+   "23-29": {
+    "study": 4.341,
+    "work": 4.493,
+    "hobbies": 2.308,
+    "social": 3.114,
+    "chores": 2.605,
+    "rest": 3.125
+   },
+   "30-39": {
+    "study": 4.341,
+    "work": 4.493,
+    "hobbies": 2.308,
+    "social": 3.114,
+    "chores": 2.605,
+    "rest": 3.125
+   },
+   "40-49": {
+    "study": 4.341,
+    "work": 4.493,
+    "hobbies": 2.308,
+    "social": 3.114,
+    "chores": 2.605,
+    "rest": 3.125
+   },
+   "50-59": {
+    "study": 4.341,
+    "work": 4.493,
+    "hobbies": 2.308,
+    "social": 3.114,
+    "chores": 2.605,
+    "rest": 3.125
+   },
+   "60-64": {
+    "study": 4.339,
+    "work": 4.49,
+    "hobbies": 2.303,
+    "social": 3.047,
+    "chores": 2.604,
+    "rest": 3.227
+   },
+   "65-70": {
+    "study": 4.342,
+    "work": 4.496,
+    "hobbies": 2.309,
+    "social": 3.147,
+    "chores": 2.605,
+    "rest": 3.074
+   }
+  },
+  "self-employed": {
+   "14-17": {
+    "study": 3.94,
+    "work": 1.743,
+    "hobbies": 3.003,
+    "social": 2.639,
+    "chores": 2.879,
+    "rest": 3.293
+   },
+   "18-22": {
+    "study": 3.192,
+    "work": 1.744,
+    "hobbies": 2.993,
+    "social": 2.212,
+    "chores": 2.897,
+    "rest": 3.298
+   },
+   "23-29": {
+    "study": 3.196,
+    "work": 1.743,
+    "hobbies": 2.999,
+    "social": 2.328,
+    "chores": 2.9,
+    "rest": 3.295
+   },
+   "30-39": {
+    "study": 3.89,
+    "work": 1.74,
+    "hobbies": 3.003,
+    "social": 2.499,
+    "chores": 2.896,
+    "rest": 3.304
+   },
+   "40-49": {
+    "study": 4.106,
+    "work": 1.74,
+    "hobbies": 3.009,
+    "social": 2.689,
+    "chores": 2.901,
+    "rest": 3.298
+   },
+   "50-59": {
+    "study": 4.339,
+    "work": 1.748,
+    "hobbies": 3.003,
+    "social": 2.9,
+    "chores": 2.899,
+    "rest": 3.29
+   },
+   "60-64": {
+    "study": 4.338,
+    "work": 1.736,
+    "hobbies": 3.0,
+    "social": 3.035,
+    "chores": 2.598,
+    "rest": 3.268
+   },
+   "65-70": {
+    "study": 4.329,
+    "work": 1.751,
+    "hobbies": 2.971,
+    "social": 3.117,
+    "chores": 2.626,
+    "rest": 3.069
+   }
+  },
+  "student": {
+   "14-17": {
+    "study": 1.657,
+    "work": 4.496,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.791,
+    "rest": 3.297
+   },
+   "18-22": {
+    "study": 1.66,
+    "work": 4.493,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.79,
+    "rest": 3.297
+   },
+   "23-29": {
+    "study": 1.66,
+    "work": 4.493,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.79,
+    "rest": 3.297
+   },
+   "30-39": {
+    "study": 1.66,
+    "work": 4.493,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.79,
+    "rest": 3.297
+   },
+   "40-49": {
+    "study": 1.66,
+    "work": 4.493,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.79,
+    "rest": 3.297
+   },
+   "50-59": {
+    "study": 1.66,
+    "work": 4.493,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.79,
+    "rest": 3.297
+   },
+   "60-64": {
+    "study": 1.66,
+    "work": 4.493,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.79,
+    "rest": 3.297
+   },
+   "65-70": {
+    "study": 1.66,
+    "work": 4.493,
+    "hobbies": 2.696,
+    "social": 2.124,
+    "chores": 3.79,
+    "rest": 3.297
+   }
+  },
+  "unemployed": {
+   "14-17": {
+    "study": 2.674,
+    "work": 2.396,
+    "hobbies": 2.754,
+    "social": 2.124,
+    "chores": 3.77,
+    "rest": 3.284
+   },
+   "18-22": {
+    "study": 2.618,
+    "work": 2.421,
+    "hobbies": 3.01,
+    "social": 2.22,
+    "chores": 2.888,
+    "rest": 3.307
+   },
+   "23-29": {
+    "study": 2.606,
+    "work": 2.415,
+    "hobbies": 2.994,
+    "social": 2.31,
+    "chores": 2.905,
+    "rest": 3.309
+   },
+   "30-39": {
+    "study": 3.727,
+    "work": 2.398,
+    "hobbies": 2.998,
+    "social": 2.496,
+    "chores": 2.88,
+    "rest": 3.298
+   },
+   "40-49": {
+    "study": 4.082,
+    "work": 2.404,
+    "hobbies": 3.009,
+    "social": 2.702,
+    "chores": 2.916,
+    "rest": 3.3
+   },
+   "50-59": {
+    "study": 4.333,
+    "work": 2.418,
+    "hobbies": 2.999,
+    "social": 2.867,
+    "chores": 2.917,
+    "rest": 3.301
+   },
+   "60-64": {
+    "study": 4.303,
+    "work": 2.396,
+    "hobbies": 2.99,
+    "social": 2.974,
+    "chores": 2.633,
+    "rest": 3.251
+   },
+   "65-70": {
+    "study": 4.102,
+    "work": 2.346,
+    "hobbies": 2.935,
+    "social": 2.917,
+    "chores": 2.716,
+    "rest": 3.071
+   }
+  }
+ },
+ "byAgeActivity": {
+  "14-17": {
+   "low": {
+    "health": 3.022,
+    "sports": 3.425,
+    "gym": 3.355
+   },
+   "moderate": {
+    "health": 2.934,
+    "sports": 2.702,
+    "gym": 2.715
+   },
+   "high": {
+    "health": 2.761,
+    "sports": 1.834,
+    "gym": 1.942
+   }
+  },
+  "18-22": {
+   "low": {
+    "health": 2.953,
+    "sports": 3.463,
+    "gym": 3.395
+   },
+   "moderate": {
+    "health": 2.832,
+    "sports": 2.757,
+    "gym": 2.772
+   },
+   "high": {
+    "health": 2.677,
+    "sports": 1.899,
+    "gym": 2.003
+   }
+  },
+  "23-29": {
+   "low": {
+    "health": 2.847,
+    "sports": 3.578,
+    "gym": 3.484
+   },
+   "moderate": {
+    "health": 2.712,
+    "sports": 2.828,
+    "gym": 2.82
+   },
+   "high": {
+    "health": 2.557,
+    "sports": 1.975,
+    "gym": 2.071
+   }
+  },
+  "30-39": {
+   "low": {
+    "health": 2.664,
+    "sports": 3.676,
+    "gym": 3.586
+   },
+   "moderate": {
+    "health": 2.534,
+    "sports": 2.941,
+    "gym": 2.914
+   },
+   "high": {
+    "health": 2.394,
+    "sports": 2.087,
+    "gym": 2.16
+   }
+  },
+  "40-49": {
+   "low": {
+    "health": 2.463,
+    "sports": 3.811,
+    "gym": 3.698
+   },
+   "moderate": {
+    "health": 2.337,
+    "sports": 3.058,
+    "gym": 3.014
+   },
+   "high": {
+    "health": 2.192,
+    "sports": 2.213,
+    "gym": 2.26
+   }
+  },
+  "50-59": {
+   "low": {
+    "health": 2.265,
+    "sports": 3.955,
+    "gym": 3.807
+   },
+   "moderate": {
+    "health": 2.14,
+    "sports": 3.184,
+    "gym": 3.111
+   },
+   "high": {
+    "health": 2.006,
+    "sports": 2.333,
+    "gym": 2.371
+   }
+  },
+  "60-64": {
+   "low": {
+    "health": 2.011,
+    "sports": 4.058,
+    "gym": 3.894
+   },
+   "moderate": {
+    "health": 1.957,
+    "sports": 3.273,
+    "gym": 3.191
+   },
+   "high": {
+    "health": 1.85,
+    "sports": 2.431,
+    "gym": 2.444
+   }
+  },
+  "65-70": {
+   "low": {
+    "health": 1.927,
+    "sports": 4.127,
+    "gym": 3.962
+   },
+   "moderate": {
+    "health": 1.888,
+    "sports": 3.34,
+    "gym": 3.245
+   },
+   "high": {
+    "health": 1.748,
+    "sports": 2.506,
+    "gym": 2.488
+   }
+  }
+ },
+ "activityNormsByAgeBucket": {
+  "14-17": {
+   "mean": 0.728,
+   "p50": 0.72,
+   "p90": 1.0
+  },
+  "18-22": {
+   "mean": 0.705,
+   "p50": 0.7,
+   "p90": 0.98
+  },
+  "23-29": {
+   "mean": 0.674,
+   "p50": 0.68,
+   "p90": 0.94
+  },
+  "30-39": {
+   "mean": 0.631,
+   "p50": 0.62,
+   "p90": 0.9
+  },
+  "40-49": {
+   "mean": 0.578,
+   "p50": 0.58,
+   "p90": 0.84
+  },
+  "50-59": {
+   "mean": 0.524,
+   "p50": 0.52,
+   "p90": 0.78
+  },
+  "60-64": {
+   "mean": 0.484,
+   "p50": 0.48,
+   "p90": 0.74
+  },
+  "65-70": {
+   "mean": 0.454,
+   "p50": 0.44,
+   "p90": 0.72
+  }
+ }
+}

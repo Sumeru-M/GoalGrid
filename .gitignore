@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+**/dist/
+**/build/
+
+# Vite / bundler caches
+.vite/
+*.tsbuildinfo
+
+# Expo / React Native (added in the mobile phase)
+.expo/
+**/.expo/
+*.ipa
+*.apk
+*.aab
+ios/Pods/
+android/.gradle/
+
+# Local dev server file store
+.data/
+
+# Training artifacts — regenerate with training/generate_data.py
+training/data/*.csv
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs & coverage
+*.log
+npm-debug.log*
+coverage/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
