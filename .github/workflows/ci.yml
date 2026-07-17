@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # --- Engine + backend (root project) ---
+      - name: Install (root)
+        run: npm ci
+      - name: Typecheck (engine + backend)
+        run: npm run typecheck
+      - name: Test (engine + backend)
+        run: npm test
+
+      # --- Frontend ---
+      - name: Install (frontend)
+        run: npm ci
+        working-directory: frontend
+      - name: Typecheck (frontend)
+        run: npx tsc --noEmit
+        working-directory: frontend
