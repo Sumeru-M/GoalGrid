@@ -11,7 +11,11 @@ so the only platform-specific piece is the storage adapter
 ```bash
 cd apps/mobile
 npm install            # also links the shared core (postinstall)
-npm run ios            # or: npm run android  /  npm start then scan in Expo Go
+
+npm run web            # fastest — opens in a browser, no native toolchain
+npm run ios            # iOS Simulator (needs Xcode)
+npm run android        # Android emulator (needs Android Studio)
+npm start              # dev server; scan the QR with a matching dev client
 ```
 
 If imports of `goalgrid-core` / `goalgrid-backend` ever fail to resolve, re-link:
@@ -30,10 +34,40 @@ never copied or forked.
 > This is a lightweight monorepo link. A follow-up can promote it to formal npm
 > workspaces so CI can build the app without the postinstall step.
 
-## Status (Phase 1)
+## Status
 
-Smoke test only: [`App.tsx`](App.tsx) saves a demo profile, generates a plan via
-the real backend API against AsyncStorage, and renders it — proving the engine +
-backend + trained model run on-device. Verified headlessly: `tsc --noEmit` passes
-and `expo export` bundles for iOS (602 modules, Hermes). The full screen port
-(Dashboard, Calendar, Priority, Tasks, Setup, Reschedule) is Phases 2–3.
+All seven screens are ported (Setup, Dashboard, Calendar, Priority, Tasks,
+AddGoal, Reschedule) with the monochrome theme, numeric priorities, and the
+trained model bundled into the JS. Verified headlessly (`tsc` + `expo export`)
+and end-to-end on the **web target** (`react-native-web`), which exercises the
+real RN components + the full engine/backend. Native device runs are the
+remaining validation step (see below).
+
+## Release (EAS)
+
+App identity lives in [`app.json`](app.json) (name **GoalGrid**, bundle id
+`com.goalgrid.app`, black splash, light/dark automatic). Build profiles are in
+[`eas.json`](eas.json).
+
+```bash
+npm i -g eas-cli        # once
+eas login               # your Expo account
+eas build --profile preview  --platform ios       # simulator build to validate
+eas build --profile production --platform all      # store-ready binaries
+eas submit --profile production --platform ios      # needs Apple Developer acct
+```
+
+Store submission requires **your** Apple Developer / Google Play accounts and
+signing credentials — those steps are owner-only.
+
+> ⚠️ **SDK note:** this app is on **Expo SDK 57 (React 19 / RN 0.86)** — very new.
+> If it won't open in the App-Store Expo Go, use a **dev build**
+> (`eas build --profile development`) or pin to the current **stable** SDK before
+> release. Pinning is the lower-risk choice for shipping.
+
+## Known follow-ups
+
+- Promote the `link-core.sh` shim to formal **npm workspaces** so CI can build
+  the app without the postinstall link.
+- Extract a shared `goalgrid-client` package to de-duplicate
+  `format`/`api`/`useAppData` between web and mobile.

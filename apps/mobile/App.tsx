@@ -39,11 +39,15 @@ function SheetModal({ visible, onClose, children }: { visible: boolean; onClose:
   const t = useTheme();
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet">
-      <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }} edges={["top", "bottom"]}>
-        <ScrollView contentContainerStyle={{ padding: 20 }} keyboardShouldPersistTaps="handled">
-          {children}
-        </ScrollView>
-      </SafeAreaView>
+      {/* RN Modal renders in a separate native view tree, so it needs its own
+          SafeAreaProvider — otherwise insets collapse to 0 under the notch. */}
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }} edges={["top", "bottom"]}>
+          <ScrollView contentContainerStyle={{ padding: 20 }} keyboardShouldPersistTaps="handled">
+            {children}
+          </ScrollView>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Modal>
   );
 }
