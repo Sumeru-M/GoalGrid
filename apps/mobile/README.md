@@ -11,11 +11,29 @@ so the only platform-specific piece is the storage adapter
 ```bash
 cd apps/mobile
 npm install            # also links the shared core (postinstall)
+```
 
-npm run web            # fastest — opens in a browser, no native toolchain
-npm run ios            # iOS Simulator (needs Xcode)
-npm run android        # Android emulator (needs Android Studio)
-npm start              # dev server; scan the QR with a matching dev client
+Pick the path that matches what you have installed:
+
+| Path | Command | Needs |
+|------|---------|-------|
+| **Browser** (fastest, no toolchain) | `npm run web` | nothing |
+| **iOS Simulator** | `npm run ios` | Xcode + a simulator |
+| **Android emulator** | `npm run android` | Android Studio + JDK |
+| **Physical device (recommended)** | build a **dev client** (below), then `npm start` | Expo account (free) |
+
+### Physical device — use a development build, not Expo Go
+
+This app runs on the current **latest** Expo SDK (57). Expo Go from the app
+stores only ever supports the latest SDK, so it *should* load the app — but a
+dev build is the reliable, version-independent way (and what you'll ship). The
+`development` profile in [`eas.json`](eas.json) targets `expo-dev-client`:
+
+```bash
+npm i -g eas-cli && eas login
+eas build --profile development --platform ios      # or android
+# install the resulting build on your device, then:
+npm start                                            # opens in your dev client
 ```
 
 If imports of `goalgrid-core` / `goalgrid-backend` ever fail to resolve, re-link:
@@ -60,10 +78,12 @@ eas submit --profile production --platform ios      # needs Apple Developer acct
 Store submission requires **your** Apple Developer / Google Play accounts and
 signing credentials — those steps are owner-only.
 
-> ⚠️ **SDK note:** this app is on **Expo SDK 57 (React 19 / RN 0.86)** — very new.
-> If it won't open in the App-Store Expo Go, use a **dev build**
-> (`eas build --profile development`) or pin to the current **stable** SDK before
-> release. Pinning is the lower-risk choice for shipping.
+> **SDK note:** this app is on **Expo SDK 57** — which is the current **latest
+> stable** release (`expo` dist-tag `latest`), not a canary. Expo Go supports
+> only the latest SDK, so *staying* on 57 is what keeps it Expo-Go-loadable;
+> downgrading would break that. For reliable, version-independent device runs
+> use the **development build** above (`expo-dev-client` is installed and the
+> `development` EAS profile is configured). `npx expo-doctor` → 20/20.
 
 ## Known follow-ups
 
