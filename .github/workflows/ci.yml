@@ -6,6 +6,7 @@ on:
   pull_request:
 
 jobs:
+  # Engine + backend + web — the fast feedback loop.
   verify:
     runs-on: ubuntu-latest
     steps:
@@ -32,3 +33,21 @@ jobs:
       - name: Typecheck (frontend)
         run: npx tsc --noEmit
         working-directory: frontend
+
+  # Mobile app — heavier (RN/Expo), so it runs in parallel. `npm ci` runs the
+  # postinstall that links the shared engine/backend into node_modules.
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install (mobile) + link shared core
+        run: npm ci
+        working-directory: apps/mobile
+      - name: Typecheck (mobile)
+        run: npx tsc --noEmit
+        working-directory: apps/mobile

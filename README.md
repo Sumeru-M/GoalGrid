@@ -1,15 +1,33 @@
-# GoalGrid — AI Planner Engine
+# GoalGrid — local-first AI planner
 
-A self-contained, zero-dependency TypeScript engine that turns a user's profile
-and goals into a prioritised, time-allocated schedule — and reschedules it when
-days are missed. Pure functions + one stateful façade, so it runs **on-device**
-(React Native) or **server-side** unchanged.
+GoalGrid turns a user's profile and goals into a prioritised, time-allocated
+schedule — and reschedules it when days are missed. It's **local-first**: all
+user data lives on the device, and the same zero-dependency TypeScript engine +
+backend run unchanged across a web app and a React Native app.
 
 ```bash
 npm install
-npm test      # 10 assertions, no framework
+npm test      # 43 tests (19 engine + 24 backend), no framework
 npm run demo  # end-to-end weekly plan for a student
 ```
+
+## Repository map
+
+| Component | Path | What it is |
+|-----------|------|------------|
+| **Engine** | [`src/`](src/) | Zero-dep scheduler: priority scoring, hierarchical learning, time allocation, reschedule. Runs on-device or server-side. |
+| **Trained model** | [`src/model/`](src/model/) | Data-calibrated priors ([trainedPriors.ts](src/model/trainedPriors.ts)) consumed as the engine's fallback. |
+| **Backend** | [`backend/`](backend/) | Local-first: repositories → service → framework-agnostic API, all over a `KVStore` seam. ([backend/README.md](backend/README.md)) |
+| **Web app** | [`frontend/`](frontend/) | React + Vite, monochrome theme, platform-adaptive. ([frontend/README.md](frontend/README.md)) |
+| **Mobile app** | [`apps/mobile/`](apps/mobile/) | React Native / Expo, reusing the engine + backend verbatim via an `AsyncStorage` `KVStore`. ([apps/mobile/README.md](apps/mobile/README.md)) |
+| **Training** | [`training/`](training/) | Python pipeline: 600k synthetic users → norm-checked priors. ([training/README.md](training/README.md)) |
+| **Subagents** | [`.claude/agents/`](.claude/agents/) | `verify`, `reviewer`, `trainer` — project-tuned agents for the recurring workflows. |
+
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) gates every push:
+typecheck (engine/backend, frontend, mobile) + the 43-test suite.
+
+The rest of this document details the **engine**; see each component's README
+above for the others.
 
 ## What it does
 
