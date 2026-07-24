@@ -118,6 +118,21 @@ export class ScheduleRepository {
   }
 }
 
+
+/**
+ * Collision-resistant suffix for append-only log keys. Prefers platform crypto
+ * (feature-detected — Hermes/older RN may lack it) and degrades safely.
+ */
+function randomSuffix(): string {
+  const c: any = (globalThis as any).crypto;
+  if (c?.randomUUID) return c.randomUUID().slice(0, 8);
+  if (c?.getRandomValues) {
+    const a = new Uint32Array(2); c.getRandomValues(a);
+    return Array.from(a, (n) => n.toString(36)).join("").slice(0, 8);
+  }
+  return Math.random().toString(36).slice(2, 10);
+}
+
 export class OutcomeRepository {
   constructor(private kv: KVStore) {}
   async append(record: OutcomeRecord): Promise<void> {
@@ -125,7 +140,7 @@ export class OutcomeRepository {
     // recorded in the same millisecond (e.g. backfilling a day's tasks). Keying
     // by timestamp alone collides and silently drops records, so add a random
     // suffix. `record.at` still drives ordering in list().
-    const uniq = `${record.at}-${Math.random().toString(36).slice(2, 8)}`;
+    const uniq = `${record.at}-${randomSuffix()}`;
     await this.kv.set(K.outcome(uniq), JSON.stringify(record));
   }
   async list(): Promise<OutcomeRecord[]> {

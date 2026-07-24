@@ -116,6 +116,24 @@ async function main() {
     ok("goals empty after erase", (after.body as any).goals.length === 0);
   }
 
+  console.log("\nReschedule respects completion history (no resurrected once-goals):");
+  {
+    const kv3 = new MemoryKVStore();
+    const { client } = createBackend(kv3);
+    await client.put("/profile", profile);
+    await client.post("/goals", { id: "essay", title: "Essay", category: ["study"], estimatedMinutes: 120, recurrence: { kind: "once" } });
+    // Finished on Monday...
+    await client.post("/outcomes", { goalId: "essay", completed: true, date: "2024-05-20" });
+    // ...user reschedules on Wednesday; the finished one-off must NOT come back.
+    const r = await client.post("/schedule/reschedule", {
+      horizon: "weekly", from: "2024-05-20", replanFrom: "2024-05-22", missedDates: ["2024-05-21"],
+    });
+    const sched = (r.body as any).result.schedule;
+    const blocks = sched.days.flatMap((d: any) => d.blocks);
+    ok("completed once-goal is not rescheduled", !blocks.some((b: any) => b.goalId === "essay"));
+    ok("no phantom catch-up clone for it", !blocks.some((b: any) => String(b.goalId).startsWith("essay__catchup")));
+  }
+
   console.log("\nCorrupt-record resilience:");
   {
     const kv2 = new MemoryKVStore();

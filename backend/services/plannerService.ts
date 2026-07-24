@@ -123,7 +123,11 @@ export class PlannerService {
   }): Promise<{ schedule: Schedule; summary: string[] }> {
     const engine = await this.buildEngine();
     const goals = await this.store.goals.list();
-    const completedMinutes = await this.completedByDate();
+    // Read the outcome log ONCE and derive both views from it (it used to be
+    // scanned twice per call), then credit full history to the replan.
+    const outcomes = await this.store.outcomes.list();
+    const completedMinutes = this.completedByDateFrom(outcomes, goals);
+    const aggregateCompleted = this.completedMinutesFrom(outcomes, goals);
     const result = engine.reschedule(
       goals,
       { horizon: params.horizon, from: params.from },
@@ -131,6 +135,7 @@ export class PlannerService {
         missedDates: params.missedDates,
         replanFrom: params.replanFrom,
         completedMinutes,
+        aggregateCompleted,
       },
     );
     // reschedule() may have learned from the misses — persist model + schedule.
@@ -175,8 +180,15 @@ export class PlannerService {
    * horizon-wide total would wrongly suppress future occurrences.
    */
   private async completedMinutesFromHistory(): Promise<Record<string, number>> {
-    const outcomes = await this.store.outcomes.list();
-    const goals = await this.store.goals.list();
+    const [outcomes, goals] = await Promise.all([
+      this.store.outcomes.list(),
+      this.store.goals.list(),
+    ]);
+    return this.completedMinutesFrom(outcomes, goals);
+  }
+
+  /** Pure: aggregate completed minutes per one-off goal (single scan). */
+  private completedMinutesFrom(outcomes: OutcomeRecord[], goals: Goal[]): Record<string, number> {
     const byId = new Map(goals.map((g) => [g.id, g]));
     const acc: Record<string, number> = {};
     for (const o of outcomes) {
@@ -196,9 +208,11 @@ export class PlannerService {
    * { "2026-07-17": { gym: 60 } }. Used by reschedule so a session the user
    * actually finished on a missed day isn't recovered as catch-up work.
    */
-  private async completedByDate(): Promise<Record<string, Record<string, number>>> {
-    const outcomes = await this.store.outcomes.list();
-    const goals = await this.store.goals.list();
+  /** Pure: completed minutes per goal keyed by date (single scan). */
+  private completedByDateFrom(
+    outcomes: OutcomeRecord[],
+    goals: Goal[],
+  ): Record<string, Record<string, number>> {
     const byId = new Map(goals.map((g) => [g.id, g]));
     const acc: Record<string, Record<string, number>> = {};
     for (const o of outcomes) {

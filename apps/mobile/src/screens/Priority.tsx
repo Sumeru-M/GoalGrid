@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useApp } from "../appContext";
 import { useTheme, priorityLabel } from "../theme";
@@ -15,9 +15,13 @@ export function Priority() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+
   function flash(msg: string) {
     setNotice(msg);
-    setTimeout(() => setNotice(null), 2500);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setNotice(null), 2500);
   }
 
   useEffect(() => {

@@ -105,7 +105,8 @@ function recurrence(v: unknown): Recurrence | undefined {
     case "daily": return { kind: "daily" };
     case "weekdays": return { kind: "weekdays" };
     case "weekly":
-      if (!Array.isArray(v.daysOfWeek)) fail("recurrence.daysOfWeek required for weekly");
+      if (!Array.isArray(v.daysOfWeek) || v.daysOfWeek.length === 0)
+        fail("recurrence.daysOfWeek must be a non-empty array for weekly");
       return { kind: "weekly", daysOfWeek: v.daysOfWeek.map((d, i) => num(d, `recurrence.daysOfWeek[${i}]`, 0, 6)) };
     default: return fail("recurrence.kind invalid");
   }

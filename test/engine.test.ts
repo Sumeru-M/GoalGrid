@@ -108,6 +108,49 @@ console.log("\nReschedule recovers missed recurring work:");
   ok("summary reports the recovery (not 'on track')", summary.some((l) => /catch-up/i.test(l)));
 }
 
+console.log("\nStarved recurring goals are reported as unscheduled:");
+{
+  const engine = new AIPlannerEngine(profile);
+  engine.declarePriority(["study"], 1);
+  engine.declarePriority(["hobbies"], 5);
+  const goals: Goal[] = [
+    // Study eats ~590 of the ~600 weekday minutes; the hobby (min session 15)
+    // is starved on weekdays but fits on free weekends.
+    { id: "study", title: "Study", category: ["study"], estimatedMinutes: 590, recurrence: { kind: "daily" } },
+    { id: "hobby", title: "Hobby", category: ["hobbies"], estimatedMinutes: 120, recurrence: { kind: "daily" } },
+  ];
+  const s = engine.plan(goals, { horizon: "weekly", from: "2024-05-20" }); // Mon–Sun
+  const hobbyEntries = s.unscheduled.filter((u) => u.goalId === "hobby");
+  ok("starved recurring hobby appears in unscheduled", hobbyEntries.length > 0);
+  ok("shortfall is aggregated into a single entry per goal", hobbyEntries.length === 1);
+  ok("reason is insufficient-capacity", hobbyEntries[0]?.reason === "insufficient-capacity");
+  const hobbyPlaced = s.days.reduce(
+    (sum, d) => sum + d.blocks.filter((b) => b.goalId === "hobby").reduce((m, b) => m + (b.end - b.start), 0),
+    0,
+  );
+  ok("minutesShort equals total unplaced minutes across the horizon",
+    hobbyEntries[0]?.minutesShort === 7 * 120 - hobbyPlaced);
+  ok("fully placed recurring study is not reported", !s.unscheduled.some((u) => u.goalId === "study"));
+}
+
+console.log("\nRecurring goals ignore stale deadlines (no permanent 3x urgency):");
+{
+  const engine = new AIPlannerEngine(profile);
+  const staleRecurring: Goal = {
+    id: "gym", title: "Gym", category: ["health"], estimatedMinutes: 60,
+    recurrence: { kind: "daily" }, deadline: "2024-01-01",
+  };
+  const noDeadline: Goal = { ...staleRecurring, id: "gym2", deadline: undefined };
+  const a = engine.explain(staleRecurring, "2024-05-20");
+  const b = engine.explain(noDeadline, "2024-05-20");
+  ok("past-deadline recurring goal scores as if undated", a.score === b.score);
+  ok("its urgency component is neutral (1), not the overdue spike (3)", a.urgencyComponent === 1);
+  // Once-goals keep the documented overdue spike (scheduler drops them separately).
+  const staleOnce: Goal = { ...staleRecurring, id: "essay", recurrence: { kind: "once" } };
+  ok("overdue once-goal still gets the 3x overdue push",
+    engine.explain(staleOnce, "2024-05-20").urgencyComponent === 3);
+}
+
 console.log("\nTrained priors shape decisions by age / occupation / activity:");
 {
   const base = (over: Partial<UserProfile>): UserProfile => ({

@@ -17,7 +17,8 @@ export function Tasks({ data, go }: { data: AppData; go: (t: Tab) => void }) {
     setBusy(goalId);
     try {
       await api.recordOutcome(goalId, true, todayISO());
-      await data.reload();
+      // refreshOutcomes (not reload) so a just-applied catch-up plan survives.
+      await data.refreshOutcomes();
       flash("Marked done — the AI noted your follow-through");
     } catch (e) {
       flash(e instanceof Error ? e.message : "Couldn't save. Try again.");

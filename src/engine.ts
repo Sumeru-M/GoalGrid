@@ -91,6 +91,13 @@ export class AIPlannerEngine {
       missedDates: ISODate[];
       /** Minutes completed per goal, keyed by date → { goalId: minutes }. */
       completedMinutes?: Record<ISODate, Record<string, number>>;
+      /**
+       * Aggregate minutes already completed per goal across all history
+       * (goalId → minutes), the same shape `plan()` takes. Without this, a
+       * one-off finished on an earlier day would resurface in both the
+       * before/after plans — and could even spawn a phantom catch-up clone.
+       */
+      aggregateCompleted?: Record<string, number>;
       /** The date to replan from (usually "today"). */
       replanFrom: ISODate;
     },
@@ -98,7 +105,10 @@ export class AIPlannerEngine {
     // Tally the minutes that were planned on the missed day(s) but not
     // completed, per goal. This is the work that must be recovered.
     const missedMinutes: Record<string, number> = {};
-    const before = this.plan(goals, opts);
+    const before = this.plan(goals, {
+      ...opts,
+      completedMinutes: params.aggregateCompleted,
+    });
     for (const day of before.days) {
       if (!params.missedDates.includes(day.date)) continue;
       const doneOnDay = params.completedMinutes?.[day.date] ?? {};
@@ -138,10 +148,15 @@ export class AIPlannerEngine {
       });
     }
 
+    // Credit all history (so finished one-offs stay finished), plus anything
+    // already done on the replan day itself.
     const after = this.plan([...goals, ...catchUp], {
       ...opts,
       from: params.replanFrom,
-      completedMinutes: params.completedMinutes?.[params.replanFrom],
+      completedMinutes: {
+        ...(params.aggregateCompleted ?? {}),
+        ...(params.completedMinutes?.[params.replanFrom] ?? {}),
+      },
     });
 
     const summary = diffSummary(before, after, [...goals, ...catchUp], params.replanFrom);

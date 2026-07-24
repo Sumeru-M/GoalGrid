@@ -89,7 +89,7 @@ export function Dashboard() {
         </View>
       </Card>
 
-      <Btn label="Missed a day? Reschedule with AI" ghost onPress={openReschedule} />
+      <Btn label="Recover missed days" ghost onPress={openReschedule} />
     </Screen>
   );
 }

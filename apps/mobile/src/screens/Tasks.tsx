@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useApp } from "../appContext";
 import { useTheme, priorityColor } from "../theme";
@@ -16,14 +16,18 @@ export function Tasks() {
   const levelOf: Record<string, number> = {};
   for (const d of data.schedule?.days ?? []) for (const b of d.blocks) levelOf[b.goalId] = b.priorityLevel;
 
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+
   function flash(msg: string) {
     setNotice(msg);
-    setTimeout(() => setNotice(null), 2500);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setNotice(null), 2500);
   }
 
   async function markDone(id: string) {
     setBusy(id);
-    try { await api.recordOutcome(id, true, todayISO()); await data.reload(); }
+    try { await api.recordOutcome(id, true, todayISO()); await data.refreshOutcomes(); }
     catch (e) { flash(e instanceof Error ? e.message : "Couldn't save. Try again."); }
     finally { setBusy(null); }
   }

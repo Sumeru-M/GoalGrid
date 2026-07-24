@@ -93,7 +93,7 @@ export function Dashboard({ data, go }: { data: AppData; go: (t: Tab) => void })
       </div>
 
       <button className="btn btn-ghost" onClick={() => go("reschedule")}>
-        Missed a day? Reschedule with AI
+        Recover missed days
       </button>
     </div>
   );

@@ -15,6 +15,7 @@
  *   Learning
  *     POST   /priorities            { category: string[], level: 1..5 }
  *     POST   /outcomes              { goalId, completed, date }
+ *     GET    /outcomes              (completion history)
  *   Scheduling
  *     POST   /schedule/plan         { horizon, from }
  *     GET    /schedule?horizon=weekly

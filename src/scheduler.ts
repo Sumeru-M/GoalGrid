@@ -203,6 +203,9 @@ export function buildSchedule(
   }
 
   const droppedPastDeadline = new Set<string>();
+  // Recurring goals starved of capacity: goalId → aggregated unplaced minutes
+  // across the horizon (kept per-goal so the unscheduled list stays small).
+  const recurringShortfall = new Map<string, { title: string; minutes: number }>();
 
   for (let i = 0; i < nDays; i++) {
     const date = addDays(opts.from, i);
@@ -260,8 +263,20 @@ export function buildSchedule(
         blocks.push(...res.blocks);
         workingFree = res.free;
         usedMinutes += res.placed;
-        w.remaining -= res.placed; // only meaningful for carried one-offs
+        w.remaining -= res.placed; // carried for one-offs; today's shortfall for recurring
       }
+    }
+
+    // Record any recurring occurrence that could not be (fully) placed today.
+    for (const w of todaysWork) {
+      const rec = w.goal.recurrence ?? { kind: "once" };
+      if (rec.kind === "once") continue; // one-offs report via their own path below
+      if (w.remaining <= 0) continue;
+      const prev = recurringShortfall.get(w.goal.id);
+      recurringShortfall.set(w.goal.id, {
+        title: w.goal.title,
+        minutes: (prev?.minutes ?? 0) + w.remaining,
+      });
     }
 
     blocks.sort((a, b) => a.start - b.start);
@@ -279,6 +294,14 @@ export function buildSchedule(
         minutesShort: w.remaining,
       });
     }
+  }
+  for (const [goalId, sf] of recurringShortfall) {
+    unscheduled.push({
+      goalId,
+      title: sf.title,
+      reason: "insufficient-capacity",
+      minutesShort: sf.minutes,
+    });
   }
 
   return { horizon: opts.horizon, from: opts.from, to, days, unscheduled };

@@ -171,7 +171,12 @@ function daysBetween(a: ISODate, b: ISODate): number {
 export function urgency(goal: Goal, today: ISODate): number {
   if (!goal.deadline) return 1;
   const remaining = daysBetween(today, goal.deadline);
-  if (remaining < 0) return 3; // overdue — maximal push (still may be dropped)
+  if (remaining < 0) {
+    // A recurring goal's stale deadline is ignored (it would otherwise boost
+    // every future occurrence forever); once-goals get the overdue spike.
+    const recurring = goal.recurrence != null && goal.recurrence.kind !== "once";
+    return recurring ? 1 : 3;
+  }
   if (remaining === 0) return 2.5;
   // Smoothly ramp from ~1 (far) to ~2 (imminent) over a two-week horizon.
   return 1 + Math.min(1, 14 / (remaining + 14)) ;

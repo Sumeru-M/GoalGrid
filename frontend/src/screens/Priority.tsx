@@ -16,15 +16,22 @@ export function Priority({ data }: { data: AppData }) {
 
   // Initial order: by the engine's current score (desc).
   useEffect(() => {
+    let cancelled = false;
     (async () => {
+      try {
       const today = todayISO();
       const scored = await Promise.all(
         data.goals.map(async (g) => ({ g, ex: await api.explainGoal(g.id, today) })),
       );
       scored.sort((a, b) => b.ex.score - a.ex.score);
       setOrdered(scored.map((s) => s.g));
+      if (cancelled) return;
       setLevels(Object.fromEntries(scored.map((s) => [s.g.id, s.ex.priorityLevel])));
+      } catch (e) {
+        if (!cancelled) setToast(e instanceof Error ? e.message : "Couldn't load priorities.");
+      }
     })();
+    return () => { cancelled = true; };
   }, [data.goals]);
 
   async function commit(next: Goal[]) {
